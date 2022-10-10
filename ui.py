@@ -17,7 +17,9 @@ questions = [
 
 
 def main():
+    os.system('clear')
     print(logoText.renderText('CYCLE DAD'))
+    os.system('clear')
 
 
 if __name__ == "__main__":

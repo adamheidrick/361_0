@@ -65,13 +65,16 @@ class CycleDad:
         print("\n")
         print(self.logoText.renderText('  Auto Zip Generator'))
         print(" AUTO ZIP MICROSERVICE?")
+        # TODO: use import socket to get gather IP Address
+        # TODO: Find service to convert IP to Zip.
         pass
 
-    def dad_joke(self, zip_code = None):
+    def dad_joke(self, zip_code=None):
         os.system('clear')
         print("\n")
         print(self.logoText.renderText('  Dad Joke'))
         print(" DAD JOKE GENERATOR MICROSERVICE")
+        # TODO: Find DAD JOKE API
 
         if zip_code is None:
             # Find zip based off of IP

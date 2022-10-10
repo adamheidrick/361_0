@@ -2,11 +2,12 @@ from __future__ import print_function, unicode_literals
 
 import os
 import menus
+from termcolor import colored
 from pprint import pprint
 from prompt_toolkit.validation import Validator, ValidationError
 
 from pyfiglet import Figlet
-from PyInquirer import prompt, Separator
+from PyInquirer import prompt
 
 
 class CycleDad:
@@ -20,7 +21,7 @@ class CycleDad:
     def main(self):
         os.system('clear')
         print("\n")
-        print(self.logoText.renderText('  CYCLE DAD'))
+        print(colored(self.logoText.renderText('  CYCLE DAD'), 'yellow'))
         print(self.welcome)
         self.run()
         return 0

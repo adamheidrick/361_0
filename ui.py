@@ -20,13 +20,13 @@ class CycleDad:
 
     def main(self):
         os.system('clear')
-        print("\n")
-        print(colored(self.logoText.renderText('CYCLE DAD'), 'cyan'))
-        print(self.welcome)
         self.run()
         return 0
 
     def run(self):
+        print("\n")
+        print(colored(self.logoText.renderText('CYCLE DAD'), 'cyan'))
+        print(self.welcome)
         answers = prompt(self.home_menu, style=menus.style)
         if 'Quit Program' in answers['user_option']:
             os.system('clear')

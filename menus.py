@@ -1,7 +1,7 @@
 from PyInquirer import Separator, style_from_dict, Token
 from termcolor import colored
 
-new_feature = colored('    (Auto Zip is new and saves time but may not work if VPN in use!', 'green')
+new_feature = colored('    (Auto Zip is new and saves time but may not work if VPN in use!)', 'green')
 auto_zip = colored(' This is new but may not work with VPN!', 'green')
 
 welcome = ' Welcome to Cycle Dad! \n\n This program will give you a clothing recommendation \n' \

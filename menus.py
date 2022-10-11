@@ -1,9 +1,17 @@
 from PyInquirer import Separator, style_from_dict, Token
+from termcolor import colored
+
+new_feature = colored('    (Auto Zip is new and saves time but may not work if VPN in use!', 'green')
+auto_zip = colored(' This is new but may not work with VPN!', 'green')
 
 welcome = ' Welcome to Cycle Dad! \n\n This program will give you a clothing recommendation \n' \
-                       ' based on your weather so you can plan that epic ride. \n' \
-                       ' You can input your own zip code or it can be automatically generated. \n' \
-                       ' Or . . . you can just have a dad joke if you want. Cheers. \n'
+                       ' based on your weather so you can plan that epic ride in four easy steps:. \n\n' \
+                       ' 1. Select AUTO ZIP or ENTER ZIP from the menu below. \n' \
+                       f"{new_feature}\n" \
+                       ' 2. Confirm your zip code. \n' \
+                       ' 3. See your clothing recommendation results and dress accordingly. \n' \
+                       ' 4. Drink water to stay hydrated. \n'
+
 
 style = style_from_dict({
     Token.Separator: '#9ff436',
@@ -18,16 +26,16 @@ style = style_from_dict({
 home_menu = [
             {
                 'type': 'list',
-                'qmark': ' #',
+                'qmark': ' \u2192',
                 'message': ' Easy Nav: ',
                 'name': 'user_option',
                 'choices': [
                     Separator('\n ==  How would you like to enter your zip?  =='),
                     {
-                        'name': 'I want you to automatically find my zip.'
+                        'name': 'AUTO ZIP (**NEW FEATURE NOT VPN COMPATIBLE**)'
                     },
                     {
-                        'name': 'I want to enter my own.'
+                        'name': 'ENTER ZIP'
                     },
                     {
                         'name': 'None of that, just give me a dad joke.'
@@ -41,12 +49,6 @@ home_menu = [
         ]
 
 zip_menu = [
-            {
-                'type': 'input',
-                'qmark': ' #',
-                'name': 'zip',
-                'message': "What is your zip (7 digits or type 'esc' to go back): "
-            },
 
             {
                 'type': 'list',

@@ -40,10 +40,10 @@ class CycleDad:
 
     def parse_answers(self, answers):
         answer = answers['user_option']
-        if answer == 'I want to enter my own.':
+        if answer == 'ENTER ZIP':
             self.enter_zip()
 
-        elif answer == 'I want you to automatically find my zip.':
+        elif answer == 'AUTO ZIP (**NEW FEATURE NOT VPN COMPATIBLE**)':
             self.auto_zip()
 
         else:
@@ -52,18 +52,48 @@ class CycleDad:
     def enter_zip(self):
         os.system('clear')
         print(colored(self.logoText.renderText('Enter Zip'), 'cyan'))
-        answer = prompt(self.zip_menu, style=menus.style)
-        if "Yes, Continue" in answer['user_option']:
-            self.results()
 
-        elif 'No, Re-Enter' in answer['user_option']:
-            self.enter_zip()
+        validated = False
+        validation = ''
 
-        elif 'Go Back' in answer['user_option']:
+        while validated is not True:
+            entered_zip = input(" Enter Your ZIP or type 'q' to go back: ")
+            validation = self.validate_zip(entered_zip)
+            if validation == 1:
+                print(f" Sorry, your zip({entered_zip}) was not correct. Please try again or type 'q' to go back.")
+
+            elif validation == 'quit':
+                validated = True
+            else:
+                validated = True
+                print(' ', self.validate_zip(entered_zip))
+
+        if validated is True and validation == 'quit':
             self.go_home()
 
         else:
-            self.quit_program()
+            answer = prompt(self.zip_menu, style=menus.style)
+            if "Yes, Continue" in answer['user_option']:
+                self.results()
+
+            elif 'No, Re-Enter' in answer['user_option']:
+                self.enter_zip()
+
+            elif 'Go Back' in answer['user_option']:
+                self.go_home()
+
+            else:
+                self.quit_program()
+
+    def validate_zip(self, entered_zip):
+        if entered_zip.isnumeric() and len(entered_zip) == 7:
+            return entered_zip
+
+        elif entered_zip.lower() == 'q':
+            return 'quit'
+
+        else:
+            return 1
 
     def auto_zip(self):
         os.system('clear')

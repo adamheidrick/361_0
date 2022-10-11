@@ -85,7 +85,8 @@ class CycleDad:
             else:
                 self.quit_program()
 
-    def validate_zip(self, entered_zip):
+    @staticmethod
+    def validate_zip(entered_zip):
         if entered_zip.isnumeric() and len(entered_zip) == 7:
             return entered_zip
 
@@ -138,14 +139,14 @@ class CycleDad:
         if 'Go Home' in answers['user_option']:
             self.go_home()
 
-    def quit_program(self):
+    @staticmethod
+    def quit_program():
         os.system('clear')
         os.system('exit')
 
     def go_home(self):
         os.system('clear')
         self.main()
-
 
 
 if __name__ == "__main__":

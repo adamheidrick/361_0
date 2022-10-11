@@ -6,12 +6,12 @@ welcome = ' Welcome to Cycle Dad! \n\n This program will give you a clothing rec
                        ' Or . . . you can just have a dad joke if you want. Cheers. \n'
 
 style = style_from_dict({
-    Token.Separator: '#cc5454',
+    Token.Separator: '#9ff436',
     Token.QuestionMark: '#673ab7 bold',
-    Token.Selected: '#cc5454',  # default
-    Token.Pointer: '#673ab7 bold',
-    Token.Instruction: '',  # default
-    Token.Answer: '#f44336 bold',
+    Token.Selected: '#33abab',  # default
+    Token.Pointer: '#9ff436 bold',
+    Token.Instruction: '#9ff436',  # default
+    Token.Answer: '#36f492 bold',
     Token.Question: '',
 })
 
@@ -19,7 +19,7 @@ home_menu = [
             {
                 'type': 'list',
                 'qmark': ' #',
-                'message': ' CycleDad: ',
+                'message': ' Easy Nav: ',
                 'name': 'user_option',
                 'choices': [
                     Separator('\n ==  How would you like to enter your zip?  =='),
@@ -45,7 +45,7 @@ zip_menu = [
                 'type': 'input',
                 'qmark': ' #',
                 'name': 'zip',
-                'message': 'What is your zip (5 digits): '
+                'message': "What is your zip (7 digits or type 'esc' to go back): "
             },
 
             {
@@ -54,19 +54,16 @@ zip_menu = [
                 'message': ' CycleDad: ',
                 'name': 'user_option',
                 'choices': [
-                    Separator('\n ======== Continue, Redo, GoBack, DadJoke, Quit =========='),
+                    Separator('\n ======== Is the Zip Code Correct? =========='),
                     {
-                        'name': 'Continue.'
+                        'name': 'Yes, Continue'
                     },
                     {
-                        'name': 'Redo.'
+                        'name': 'No, Re-Enter'
                     },
 
                     {
-                        'name': 'Go Back.'
-                    },
-                    {
-                        'name': 'None of that, just give me a dad joke.'
+                        'name': 'Go Back'
                     },
                     {
                         'name': 'Quit Program'
@@ -84,11 +81,11 @@ dad_menu = [
                 'choices': [
                     Separator('\n ======== Go Home, Quit =========='),
                     {
-                        'name': 'Go Home.'
+                        'name': 'Go Home'
                     },
 
                     {
-                        'name': 'Quit Program.'
+                        'name': 'Quit Program'
                     }
                 ]
             }
@@ -108,7 +105,6 @@ auto_menu = [
                     {
                         'name': 'No, Go Back'
                     },
-
                     {
                         'name': 'Quit Program'
                     }

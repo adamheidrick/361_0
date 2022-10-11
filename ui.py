@@ -53,26 +53,36 @@ class CycleDad:
         os.system('clear')
         print(colored(self.logoText.renderText('Enter Zip'), 'cyan'))
         answer = prompt(self.zip_menu, style=menus.style)
-        if 'Go Back' in answer['user_option']:
-            os.system('clear')
-            self.main()
+        if "Yes, Continue" in answer['user_option']:
+            self.results()
 
-        if 'Redo' in answer['user_option']:
+        elif 'No, Re-Enter' in answer['user_option']:
             self.enter_zip()
 
-        if "Continue." in answer['user_option']:
-            self.results()
+        elif 'Go Back' in answer['user_option']:
+            self.go_home()
+
+        else:
+            self.quit_program()
 
     def auto_zip(self):
         os.system('clear')
         print("\n")
         print(colored(self.logoText.renderText('Auto Zip'), 'cyan'))
         print(" AUTO ZIP MICROSERVICE. YOUR ZIP IS:")
-        print(colored(' ZIPCODE', 'green'))
+        print(colored(' ZIPCODE', 'cyan'))
         # TODO: use import socket to get gather IP Address
         # TODO: Find service to convert IP to Zip.
         answers = prompt(self.auto_menu, style=menus.style)
-        pass
+
+        if 'No, Go Back' in answers['user_option']:
+            self.go_home()
+
+        if 'Quit Program' in answers['user_option']:
+            self.quit_program()
+
+        if 'Yes, Confirm' in answers['user_option']:
+            self.results()
 
     def dad_joke(self, zip_code=None):
         os.system('clear')
@@ -80,21 +90,32 @@ class CycleDad:
         print(colored(self.logoText.renderText('Dad Joke'), 'cyan'))
         print(" DAD JOKE GENERATOR MICROSERVICE\n DAD JOKE WILL GO HERE\n")
         answers = prompt(self.easy_menu, style=menus.style)
-
-        if zip_code is None:
-            # Find zip based off of IP
-            pass
-        else:
-            # API weather app MICROSERVICE
-            pass
+        if "Go Home" in answers['user_option']:
+            self.go_home()
+        if "Quit Program" in answers['user_option']:
+            self.quit_program()
 
     def results(self):
         os.system('clear')
         print("\n")
         print(colored(self.logoText.renderText('Results'), 'cyan'))
+        print(colored("\n RESULTS WILL GO HERE \n", 'cyan'))
+        print(colored("\n DAD JOKE WILL GO HERE \n\n", 'cyan'))
         answers = prompt(self.easy_menu, style=menus.style)
+        if 'Quit Program' in answers['user_option']:
+            self.quit_program()
 
-        pass
+        if 'Go Home' in answers['user_option']:
+            self.go_home()
+
+    def quit_program(self):
+        os.system('clear')
+        os.system('exit')
+
+    def go_home(self):
+        os.system('clear')
+        self.main()
+
 
 
 if __name__ == "__main__":

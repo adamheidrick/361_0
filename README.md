@@ -44,6 +44,6 @@ with open(requested_data, 'r') as f:
                     f.close()
 ```
 ###C: UML Sequence Diagram: 
-![Alt text](https://github.com/adamheidrick/361_0/blob/main/SequenceDiagram.jpeg.jpeg?raw=true "UML Sequence Diagram")
 
-https://github.com/adamheidrick/361_0/blob/main/Sequence%20Diagram.jpeg
+
+![Model](https://github.com/adamheidrick/361_0/blob/main/Sequence%20Diagram.jpeg)

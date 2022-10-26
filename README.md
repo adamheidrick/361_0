@@ -7,7 +7,7 @@ This microservice provides a random number within range based on the users reque
 
 ###A. Instructions on how to Request Data:
 * Have a .txt file in your project that your program can write to with the following name: 
-> random-int-request.txt
+```random-int-request.txt```
 * In your code, you can make a request by writing a number in string format to the random-int-request.txt file.
 * Simply write the upper limit of the range to the text file.
 * Here are a few examples in Python:
@@ -31,7 +31,7 @@ with open(request, 'w') as f:
 ```
 ### B: Instructions on how to Receive Data:
 * Similar to requesting data: have a .txt file in your project that your program can read from with the following name: 
-> random-int-receive.txt
+```random-int-receive.txt```
 * Simply read the random-int-receive.txt to reveive tha data. 
 * Here is an example in Python:
 ```

@@ -3,7 +3,7 @@ import requests
 url = "https://dad-jokes.p.rapidapi.com/random/joke"
 
 headers = {
-    "X-RapidAPI-Key": "27c0ac8818msh2ca32d6adfc0fb1p1d0a96jsn4c228f1a6b2a",
+    "X-RapidAPI-Key": "",
     "X-RapidAPI-Host": "dad-jokes.p.rapidapi.com"
 }
 

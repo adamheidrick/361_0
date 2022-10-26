@@ -21,9 +21,9 @@ def main():
             print(f"{Back.GREEN}{message} FOR VALUE: {value}")
             value = int(value)
             with open(destination, 'w') as f:
-                randy = str(random.randint(1, value))
+                randy = str(random.randint(0, value))
                 print(f'Writing Random Number to { destination }: ')
-                print(f'The random number generated from range 1 -> {value} is the following: ')
+                print(f'The random number generated from range 0 -> {value} is the following: ')
                 print(f'{Back.GREEN}{randy:_^20}')
                 f.write(randy)
 

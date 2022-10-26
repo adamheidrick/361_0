@@ -38,9 +38,10 @@ with open(request, 'w') as f:
 # This will receieve a random number based on request.
 # The variable data will hold the random number. 
 
-requested_data= 'random-int-receive.txt' 
+returned_data= 'random-int-receive.txt' 
 with open(requested_data, 'r') as f:
                     data = f.read()
                     f.close()
 ```
 ###C: UML Sequence Diagram: 
+![Alt text](Sequence Diagram.jpeg?raw=true "UML Sequence Diagram")

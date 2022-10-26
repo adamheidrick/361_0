@@ -43,7 +43,7 @@ with open(requested_data, 'r') as f:
                     data = f.read()
                     f.close()
 ```
-###C: UML Sequence Diagram: 
+### C: UML Sequence Diagram: 
 
 
 ![Model](https://github.com/adamheidrick/361_0/blob/main/Sequence%20Diagram.jpeg)

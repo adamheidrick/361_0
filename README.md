@@ -30,7 +30,7 @@ with open(request, 'w') as f:
                 f.close()
 ```
 ### B: Instructions on how to Receive Data:
-* Similar to requesting data: have a .txt file in your project that your program can read from with the following name: 
+* Similar to above: have a .txt file in your project that your program can read from with the following name: 
 ```random-int-receive.txt```
 * Simply read the random-int-receive.txt to reveive tha data. 
 * Here is an example in Python:
@@ -44,4 +44,4 @@ with open(requested_data, 'r') as f:
                     f.close()
 ```
 ###C: UML Sequence Diagram: 
-![Alt text](https://github.com/adamheidrick/361_0/blob/main/Sequence%20Diagram.jpeg.jpeg?raw=true "UML Sequence Diagram")
+![Alt text](https://github.com/adamheidrick/361_0/blob/main/SequenceDiagram.jpeg.jpeg?raw=true "UML Sequence Diagram")

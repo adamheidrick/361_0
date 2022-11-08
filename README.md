@@ -12,7 +12,7 @@ This microservice provides a random number within range based on the users reque
 * Simply write the upper limit of the range to the text file.
 * Here are a few examples in Python:
 ```
-# This will request a random number within range of 1 -> 5
+# This will request a random number within range of 0 -> 5
 # Rmember to convert the number to string. You can use str(int)
 request_source = 'random-int-request.txt' 
 with open(source, 'w') as f:

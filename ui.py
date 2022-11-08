@@ -122,7 +122,7 @@ class CycleDad:
         print("\n")
         print(colored(self.logoText.renderText('Dad Joke'), 'cyan'))
         self.dad_joke_request()
-        time.sleep(2.5)
+        time.sleep(3)
         print(self.dad_joke_receive(), '\n')
         answers = prompt(self.easy_menu, style=menus.style)
         if "Go Home" in answers['user_option']:

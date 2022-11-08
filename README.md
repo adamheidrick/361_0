@@ -5,7 +5,7 @@ This course introduces tools and methods for real-world software development.
 ## Assignment 3.5: Communication Contract
 This microservice provides a random number within range based on the users request.
 
-###A. Instructions on how to Request Data:
+### A. Instructions on how to Request Data:
 * Have a .txt file in your project that your program can write to with the following name: 
 ```random-int-request.txt```
 * In your code, you can make a request by writing a number in string format to the random-int-request.txt file.

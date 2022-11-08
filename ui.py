@@ -1,6 +1,8 @@
 from __future__ import print_function, unicode_literals
 
 import os
+import time
+
 import menus
 
 from termcolor import colored
@@ -119,12 +121,27 @@ class CycleDad:
         os.system('clear')
         print("\n")
         print(colored(self.logoText.renderText('Dad Joke'), 'cyan'))
-        print(" DAD JOKE GENERATOR MICROSERVICE\n DAD JOKE WILL GO HERE\n")
+        self.dad_joke_request()
+        time.sleep(2.5)
+        print(self.dad_joke_receive(), '\n')
         answers = prompt(self.easy_menu, style=menus.style)
         if "Go Home" in answers['user_option']:
             self.go_home()
         if "Quit Program" in answers['user_option']:
             self.quit_program()
+
+    @staticmethod
+    def dad_joke_request():
+        file = open('dad-joke.txt', 'w')
+        file.write('dad')
+        file.close()
+
+    @staticmethod
+    def dad_joke_receive():
+        file = open('dad-joke.txt', 'r')
+        dad_joke = file.read()
+        file.close()
+        return dad_joke
 
     def results(self):
         os.system('clear')

@@ -2,12 +2,16 @@ from __future__ import print_function, unicode_literals
 
 import os
 import time
+import json
+import urllib.request
+import requests
 
 import menus
 
 from termcolor import colored
 from pyfiglet import Figlet
 from PyInquirer import prompt
+from secretkeys import weather_key
 
 
 class CycleDad:
@@ -31,8 +35,7 @@ class CycleDad:
         print(self.welcome)
         answers = prompt(self.home_menu, style=menus.style)
         if 'Quit Program' in answers['user_option']:
-            os.system('clear')
-            os.system('exit')
+            self.quit_program()
 
         elif 'None of that, just give me a dad joke.' in answers['user_option']:
             self.dad_joke()
@@ -76,7 +79,7 @@ class CycleDad:
         else:
             answer = prompt(self.zip_menu, style=menus.style)
             if "Yes, Continue" in answer['user_option']:
-                self.results()
+                self.results(entered_zip)
 
             elif 'No, Re-Enter' in answer['user_option']:
                 self.enter_zip()
@@ -89,7 +92,7 @@ class CycleDad:
 
     @staticmethod
     def validate_zip(entered_zip):
-        if entered_zip.isnumeric() and len(entered_zip) == 7:
+        if entered_zip.isnumeric() and len(entered_zip) == 5:
             return entered_zip
 
         elif entered_zip.lower() == 'q':
@@ -103,9 +106,15 @@ class CycleDad:
         print("\n")
         print(colored(self.logoText.renderText('Auto Zip'), 'cyan'))
         print(" AUTO ZIP MICROSERVICE. YOUR ZIP IS:")
-        print(colored(' ZIPCODE', 'cyan'))
-        # TODO: use import socket to get gather IP Address
-        # TODO: Find service to convert IP to Zip.
+
+        ipaddr = urllib.request.urlopen('http://ipify.org').read().decode('utf8')
+        ip_api = 'http://ip-api.com/json/'
+        req = urllib.request.Request(ip_api + ipaddr)
+        response = urllib.request.urlopen(req).read()
+        json_response = json.loads(response.decode('utf-8'))
+        zip_code = json_response['zip']
+        print(colored(' ' + zip_code, 'cyan'))
+        # print(colored(' ' + ipaddr + ' ' + zip_code, 'cyan'))
         answers = prompt(self.auto_menu, style=menus.style)
 
         if 'No, Go Back' in answers['user_option']:
@@ -115,7 +124,7 @@ class CycleDad:
             self.quit_program()
 
         if 'Yes, Confirm' in answers['user_option']:
-            self.results()
+            self.results(zip_code)
 
     def dad_joke(self, zip_code=None):
         os.system('clear')
@@ -123,7 +132,6 @@ class CycleDad:
         print(colored(self.logoText.renderText('Dad Joke'), 'cyan'))
         self.dad_joke_request()
         time.sleep(3)
-        print(self.dad_joke_receive(), '\n')
         answers = prompt(self.easy_menu, style=menus.style)
         if "Go Home" in answers['user_option']:
             self.go_home()
@@ -143,11 +151,50 @@ class CycleDad:
         file.close()
         return dad_joke
 
-    def results(self):
+    @staticmethod
+    def weather_results(zip_code):
+        url = "https://weatherapi-com.p.rapidapi.com/current.json"
+        querystring = {"q": zip_code}
+        headers = {
+            "X-RapidAPI-Key": weather_key,
+            "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com"
+        }
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        data = response.json()
+        weather = [data['location']['name'], data['location']['region'], data['current']['condition']['text'],
+                   data['current']['temp_f'], data['current']['wind_mph'], data['current']['precip_in']]
+
+        print(weather)
+        return weather
+
+    @staticmethod
+    def what_to_wear(weather):
+        rainy_conditions = ['Rain', 'Shower rain', 'Mist', "Patchy rain possible", "Patchy light drizzle",
+                            "Light drizzle", "Patchy light rain", "Light rain", "Moderate rain at times",
+                            "Moderate rain", "Heavy rain at times", "Heavy rain"]
+        clothes = {'Top': None, 'Bottom': None, 'RainJacket': None}
+        if int(weather[-1] > 0) or weather[2] == 'Mist':
+            clothes['RainJacket'] = "Wear a rain jacket. It's Raining!"
+
+        if int(weather[3]) <= 60:
+            clothes['Top'] = 'Long Sleeve Jersey'
+            clothes['Bottom'] = 'Full Length Bib Tights'
+
+        else:
+            clothes['Top'] = 'Short Sleeve Jersey'
+            clothes['Bottom'] = 'Bib Shorts'
+
+        return clothes
+
+    def results(self, zip_code):
         os.system('clear')
         print("\n")
         print(colored(self.logoText.renderText('Results'), 'cyan'))
-        print(colored("\n RESULTS WILL GO HERE \n", 'cyan'))
+
+        print(colored("\n RESULTS: \n", 'cyan'))
+        print(self.what_to_wear(self.weather_results(zip_code)))
+
         print(colored("\n DAD JOKE WILL GO HERE \n\n", 'cyan'))
         answers = prompt(self.easy_menu, style=menus.style)
         if 'Quit Program' in answers['user_option']:

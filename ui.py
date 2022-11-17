@@ -8,6 +8,7 @@ import requests
 
 import menus
 
+from requests import get
 from termcolor import colored
 from pyfiglet import Figlet
 from PyInquirer import prompt
@@ -22,6 +23,10 @@ class CycleDad:
         self.easy_menu = menus.dad_menu
         self.zip_menu = menus.zip_menu
         self.auto_menu = menus.auto_menu
+        self.zip_error_menu = menus.dad_menu
+        self.rainy_conditions = ['Rain', 'Shower rain', 'Mist', "Patchy rain possible", "Patchy light drizzle",
+                                 "Light drizzle", "Patchy light rain", "Light rain", "Moderate rain at times",
+                                 "Moderate rain", "Heavy rain at times", "Heavy rain"]
         self.init = self.main()
 
     def main(self):
@@ -33,62 +38,33 @@ class CycleDad:
         print("\n")
         print(colored(self.logoText.renderText('CYCLE DAD'), 'cyan'))
         print(self.welcome)
-        answers = prompt(self.home_menu, style=menus.style)
-        if 'Quit Program' in answers['user_option']:
-            self.quit_program()
-
-        elif 'None of that, just give me a dad joke.' in answers['user_option']:
-            self.dad_joke()
-
-        else:
-            self.parse_answers(answers)
-
-    def parse_answers(self, answers):
-        answer = answers['user_option']
-        if answer == 'ENTER ZIP':
-            self.enter_zip()
-
-        elif answer == 'AUTO ZIP (**NEW FEATURE NOT VPN COMPATIBLE**)':
-            self.auto_zip()
-
-        else:
-            pass
+        self.navigation_select(prompt(self.home_menu, style=menus.style))
 
     def enter_zip(self):
         os.system('clear')
         print(colored(self.logoText.renderText('Enter Zip'), 'cyan'))
+        entered_zip, validated, validation = self.validation_loop()
 
+        if validated is True and validation == 'quit':
+            self.go_home()
+
+        self.navigation_select(prompt(self.zip_menu, style=menus.style), entered_zip)
+
+    def validation_loop(self):
         validated = False
         validation = ''
-
+        entered_zip = None
         while validated is not True:
             entered_zip = input(" Enter Your ZIP or type 'q' to go back: ")
             validation = self.validate_zip(entered_zip)
             if validation == 1:
                 print(f" Sorry, your zip({entered_zip}) was not correct. Please try again or type 'q' to go back.")
-
             elif validation == 'quit':
                 validated = True
             else:
                 validated = True
                 print(' ', self.validate_zip(entered_zip))
-
-        if validated is True and validation == 'quit':
-            self.go_home()
-
-        else:
-            answer = prompt(self.zip_menu, style=menus.style)
-            if "Yes, Continue" in answer['user_option']:
-                self.results(entered_zip)
-
-            elif 'No, Re-Enter' in answer['user_option']:
-                self.enter_zip()
-
-            elif 'Go Back' in answer['user_option']:
-                self.go_home()
-
-            else:
-                self.quit_program()
+        return entered_zip, validated, validation
 
     @staticmethod
     def validate_zip(entered_zip):
@@ -102,90 +78,103 @@ class CycleDad:
             return 1
 
     def auto_zip(self):
+        self.print_auto_zip()
+        json_response = self.retrieve_zip()
+        zip_code, country, city = json_response['postal'], json_response['country'], json_response['city']
+        print(colored(' ' + zip_code, 'cyan'))
+        self.navigation_select(prompt(self.auto_menu, style=menus.style), zip_code)
+
+    @staticmethod
+    def retrieve_zip():
+        ipaddr = get('https://api.ipify.org').text
+        req = urllib.request.Request(f"https://ipapi.co/{ipaddr}/json/")
+        response = urllib.request.urlopen(req).read()
+        json_response = json.loads(response.decode('utf-8'))
+        return json_response
+
+    def print_auto_zip(self):
         os.system('clear')
         print("\n")
         print(colored(self.logoText.renderText('Auto Zip'), 'cyan'))
         print(" AUTO ZIP MICROSERVICE. YOUR ZIP IS:")
 
-        ipaddr = urllib.request.urlopen('http://ipify.org').read().decode('utf8')
-        ip_api = 'http://ip-api.com/json/'
-        req = urllib.request.Request(ip_api + ipaddr)
-        response = urllib.request.urlopen(req).read()
-        json_response = json.loads(response.decode('utf-8'))
-        zip_code = json_response['zip']
-        print(colored(' ' + zip_code, 'cyan'))
-        # print(colored(' ' + ipaddr + ' ' + zip_code, 'cyan'))
-        answers = prompt(self.auto_menu, style=menus.style)
-
-        if 'No, Go Back' in answers['user_option']:
-            self.go_home()
-
-        if 'Quit Program' in answers['user_option']:
-            self.quit_program()
-
-        if 'Yes, Confirm' in answers['user_option']:
-            self.results(zip_code)
+    def zip_error(self, zip_code):
+        os.system('clear')
+        print("\n")
+        print(colored(f'Error. Either {zip_code} does not exist in the U.S. or it is not a U.S. zip', 'red'))
+        self.navigation_select(prompt(self.zip_error_menu, style=menus.style))
 
     def dad_joke(self, zip_code=None):
         os.system('clear')
         print("\n")
         print(colored(self.logoText.renderText('Dad Joke'), 'cyan'))
         self.dad_joke_request()
-        time.sleep(3)
-        answers = prompt(self.easy_menu, style=menus.style)
-        if "Go Home" in answers['user_option']:
-            self.go_home()
-        if "Quit Program" in answers['user_option']:
-            self.quit_program()
+        self.navigation_select(prompt(self.easy_menu, style=menus.style))
 
     @staticmethod
     def dad_joke_request():
         file = open('dad-joke.txt', 'w')
         file.write('dad')
         file.close()
+        time.sleep(3)
+        CycleDad.dad_joke_receive()
 
     @staticmethod
     def dad_joke_receive():
         file = open('dad-joke.txt', 'r')
         dad_joke = file.read()
+        print(' ' + dad_joke)
         file.close()
-        return dad_joke
 
     @staticmethod
     def weather_results(zip_code):
         url = "https://weatherapi-com.p.rapidapi.com/current.json"
         querystring = {"q": zip_code}
-        headers = {
-            "X-RapidAPI-Key": weather_key,
-            "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com"
-        }
-
+        headers = {"X-RapidAPI-Key": weather_key, "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com"}
         response = requests.request("GET", url, headers=headers, params=querystring)
         data = response.json()
-        weather = [data['location']['name'], data['location']['region'], data['current']['condition']['text'],
-                   data['current']['temp_f'], data['current']['wind_mph'], data['current']['precip_in']]
-
-        print(weather)
-        return weather
+        return CycleDad.parse_weather(data, zip_code)
 
     @staticmethod
-    def what_to_wear(weather):
-        rainy_conditions = ['Rain', 'Shower rain', 'Mist', "Patchy rain possible", "Patchy light drizzle",
-                            "Light drizzle", "Patchy light rain", "Light rain", "Moderate rain at times",
-                            "Moderate rain", "Heavy rain at times", "Heavy rain"]
-        clothes = {'Top': None, 'Bottom': None, 'RainJacket': None}
-        if int(weather[-1] > 0) or weather[2] == 'Mist':
-            clothes['RainJacket'] = "Wear a rain jacket. It's Raining!"
+    def parse_weather(data, zip_code):
+        try:
+            weather = [data['location']['name'], data['location']['region'], data['current']['condition']['text'],
+                       data['current']['temp_f'], data['current']['wind_mph'], data['current']['precip_in']]
+            CycleDad.print_weather(weather, zip_code)
+            return weather
 
-        if int(weather[3]) <= 60:
-            clothes['Top'] = 'Long Sleeve Jersey'
-            clothes['Bottom'] = 'Full Length Bib Tights'
+        except KeyError:
+            return None
 
-        else:
-            clothes['Top'] = 'Short Sleeve Jersey'
-            clothes['Bottom'] = 'Bib Shorts'
+    @staticmethod
+    def print_weather(weather, zip_code):
+        print(f' Weather Data Based on zip: {zip_code} \n')
+        details = ['City: ', 'State: ', 'Condition: ', 'Temp: ', 'Feels Like: ', 'Perc: ']
+        for i in range(len(details)):
+            print(' ' + details[i] + str(weather[i]))
+        print('\n')
 
-        return clothes
+    def what_to_wear(self, weather):
+        if self.zip_found(weather):
+            clothes = {'Top': '', 'Bottom': '', 'RainJacket': 'None'}
+
+            if int(weather[-1] > 0) or weather[2] in self.rainy_conditions:
+                clothes['RainJacket'] = "Wear a rain jacket. It's Raining!"
+
+            if int(weather[3]) <= 60:
+                clothes['Top'] = 'Long Sleeve Jersey'
+                clothes['Bottom'] = 'Full Length Bib Tights'
+
+            else:
+                clothes['Top'] = 'Short Sleeve Jersey'
+                clothes['Bottom'] = 'Bib Shorts'
+
+            return clothes
+        return None
+
+    @staticmethod
+    def zip_found(weather):
+        return weather is not None
 
     def results(self, zip_code):
         os.system('clear')
@@ -193,15 +182,51 @@ class CycleDad:
         print(colored(self.logoText.renderText('Results'), 'cyan'))
 
         print(colored("\n RESULTS: \n", 'cyan'))
-        print(self.what_to_wear(self.weather_results(zip_code)))
+        self.print_results(zip_code)
 
-        print(colored("\n DAD JOKE WILL GO HERE \n\n", 'cyan'))
-        answers = prompt(self.easy_menu, style=menus.style)
-        if 'Quit Program' in answers['user_option']:
+        print(colored("\n DAD JOKE IN 3 SECONDS: \n", 'cyan'))
+        self.dad_joke_request()
+        self.navigation_select(prompt(self.easy_menu, style=menus.style))
+
+    def print_results(self, zip_code):
+        results = self.what_to_wear(self.weather_results(zip_code))
+        if results is not None:
+            self.print_clothes(results)
+
+        else:
+            print(colored(f" Zip Error: {zip_code}. Either zip is not in U.S. or is an invalid U.S. zip. ", 'red'))
+
+    @staticmethod
+    def print_clothes(clothes):
+        print(' Clothing Recommendation: \n')
+        for key, value in clothes.items():
+            print(" " + key + ":" + " " + value)
+
+    def navigation_select(self, answers, zip_code=None):
+        answer = answers['user_option']
+        select_home = ['No, Go Back', 'Go Home', 'Go Back']
+        select_results = ['Yes, Confirm', 'Yes, Continue']
+
+        if answer in select_home:
+            self.go_home()
+
+        if answer == 'Quit Program':
             self.quit_program()
 
-        if 'Go Home' in answers['user_option']:
-            self.go_home()
+        if answer in select_results:
+            self.results(zip_code)
+
+        if answer == "No, Re-Enter":
+            self.enter_zip()
+
+        if answer == "None of that, just give me a dad joke.":
+            self.dad_joke()
+
+        if answer == 'ENTER ZIP':
+            self.enter_zip()
+
+        if answer == 'AUTO ZIP (**NEW FEATURE NOT VPN COMPATIBLE**)':
+            self.auto_zip()
 
     @staticmethod
     def quit_program():
